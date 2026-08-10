@@ -108,6 +108,7 @@ public class NotificationDetails implements Serializable {
 
   private static final String TICKER = "ticker";
   private static final String SCHEDULE_MODE = "scheduleMode";
+  private static final String INEXACT_WINDOW = "inexactWindow";
   private static final String CATEGORY = "category";
   private static final String TIMEOUT_AFTER = "timeoutAfter";
   private static final String SHOW_WHEN = "showWhen";
@@ -181,6 +182,7 @@ public class NotificationDetails implements Serializable {
   @SerializedName(value = "scheduleMode", alternate = "allowWhileIdle")
   public ScheduleMode scheduleMode;
 
+  public Integer inexactWindow;
   public Long timeoutAfter;
   public String category;
   public int[] additionalFlags;
@@ -288,6 +290,7 @@ public class NotificationDetails implements Serializable {
         notificationDetails.scheduleMode =
             ScheduleMode.valueOf((String) platformChannelSpecifics.get(SCHEDULE_MODE));
       }
+      notificationDetails.inexactWindow = (Integer) platformChannelSpecifics.get(INEXACT_WINDOW);
       notificationDetails.timeoutAfter =
           LongUtils.parseLong(platformChannelSpecifics.get(TIMEOUT_AFTER));
       notificationDetails.category = (String) platformChannelSpecifics.get(CATEGORY);

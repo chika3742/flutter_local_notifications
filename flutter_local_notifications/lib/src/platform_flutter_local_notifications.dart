@@ -253,6 +253,7 @@ class AndroidFlutterLocalNotificationsPlugin
     DateTimeComponents? matchDateTimeComponents,
     AndroidNotificationDetails? notificationDetails,
     AndroidScheduleMode scheduleMode = AndroidScheduleMode.exact,
+    Duration? inexactWindow,
   }) async {
     validateId(id);
     validateDateIsInTheFuture(scheduledDate, matchDateTimeComponents);
@@ -264,6 +265,7 @@ class AndroidFlutterLocalNotificationsPlugin
       'platformSpecifics': _buildPlatformSpecifics(
         notificationDetails,
         scheduleMode,
+        inexactWindow,
       ),
       'payload': payload ?? '',
       ...scheduledDate.toMap(),
@@ -419,6 +421,7 @@ class AndroidFlutterLocalNotificationsPlugin
       'platformSpecifics': _buildPlatformSpecifics(
         notificationDetails,
         scheduleMode,
+        null, // no corresponding API on Android
       ),
       'payload': payload ?? '',
     });
@@ -446,6 +449,7 @@ class AndroidFlutterLocalNotificationsPlugin
           'platformSpecifics': _buildPlatformSpecifics(
             notificationDetails,
             scheduleMode,
+            null, // no corresponding API on Android
           ),
           'payload': payload ?? '',
         });
@@ -454,9 +458,11 @@ class AndroidFlutterLocalNotificationsPlugin
   Map<String, Object?> _buildPlatformSpecifics(
     AndroidNotificationDetails? notificationDetails,
     AndroidScheduleMode scheduleMode,
+    Duration? inexactWindow,
   ) => <String, Object?>{
     if (notificationDetails != null) ...notificationDetails.toMap(),
     'scheduleMode': scheduleMode.name,
+    'inexactWindow': inexactWindow?.inMilliseconds,
   };
 
   /// Cancel/remove the notification with the specified id.

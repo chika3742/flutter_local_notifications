@@ -404,6 +404,15 @@ class FlutterLocalNotificationsPlugin {
   /// especially in the app's `AndroidManifest.xml` file. Please see check the
   /// readme for further details.
   ///
+  /// When [androidInexactWindow] is given on Android and [androidScheduleMode]
+  /// is set to [AndroidScheduleMode.inexact], the plugin will tell the OS the
+  /// maximum amount the notification time can drift. If [androidScheduleMode]
+  /// is set to a value other than [AndroidScheduleMode.inexact], this value
+  /// will be ignored. On Android 12+, the schedule is guaranteed not to drift
+  /// the by more than an hour and the window is clamped to a minimum of 10
+  /// minutes. Otherwise, the notification can drift by up to 75% of the time
+  /// between scheduling and the trigger time.
+  ///
   /// On Windows, this will only set a notification on the [scheduledDate], and
   /// not repeat, regardless of the value for [matchDateTimeComponents].
   Future<void> zonedSchedule({
@@ -411,6 +420,7 @@ class FlutterLocalNotificationsPlugin {
     required TZDateTime scheduledDate,
     required NotificationDetails notificationDetails,
     required AndroidScheduleMode androidScheduleMode,
+    Duration? androidInexactWindow,
     String? title,
     String? body,
     String? payload,
@@ -442,6 +452,7 @@ class FlutterLocalNotificationsPlugin {
             notificationDetails: notificationDetails.android,
             payload: payload,
             scheduleMode: androidScheduleMode,
+            inexactWindow: androidInexactWindow,
             matchDateTimeComponents: matchDateTimeComponents,
           );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -558,6 +559,14 @@ class _HomePageState extends State<HomePage> {
                       'based on local time zone using alarm clock',
                   onPressed: () async {
                     await _zonedScheduleAlarmClockNotification();
+                  },
+                ),
+                PaddedElevatedButton(
+                  buttonText:
+                      'Schedule notification to appear in 5 seconds '
+                      'based on local time zone with 5 seconds inexact window',
+                  onPressed: () async {
+                    await _zonedScheduleInexactNotification();
                   },
                 ),
                 PaddedElevatedButton(
@@ -1736,6 +1745,26 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.alarmClock,
+    );
+  }
+
+  Future<void> _zonedScheduleInexactNotification() async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id: Random().nextInt(1000),
+      title: 'scheduled inexact title',
+      body: 'scheduled inexact body',
+      scheduledDate: tz.TZDateTime.now(
+        tz.local,
+      ).add(const Duration(seconds: 5)),
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'inexact_channel',
+          'Inexact Channel',
+          channelDescription: 'Inexact Notification',
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexact,
+      androidInexactWindow: const Duration(seconds: 5),
     );
   }
 

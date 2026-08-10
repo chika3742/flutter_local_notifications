@@ -770,6 +770,8 @@ public class FlutterLocalNotificationsPlugin
       } else if (notificationDetails.scheduleMode.useAlarmClock()) {
         checkCanScheduleExactAlarms(alarmManager);
         AlarmManagerCompat.setAlarmClock(alarmManager, epochMilli, pendingIntent, pendingIntent);
+      } else if (notificationDetails.inexactWindow != null) {
+        alarmManager.setWindow(AlarmManager.RTC_WAKEUP, epochMilli, notificationDetails.inexactWindow, pendingIntent);
       } else {
         alarmManager.set(AlarmManager.RTC_WAKEUP, epochMilli, pendingIntent);
       }
